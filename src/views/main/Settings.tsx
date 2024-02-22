@@ -6,6 +6,9 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
 import { playerName } from '../../recoil/playerName';
 import { gameCondition } from '../../recoil/gameCondition';
+import SVG_LIST from '../../constant/SVG_LIST';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 
 const Settings = () => {
   const playerNameOneRef = useRef<HTMLInputElement>(null);
@@ -38,24 +41,24 @@ const Settings = () => {
       setPlayerName(
         random === 1
           ? [
-              { name: playerOne, icon: <></>, color: 'red' },
-              { name: playerTwo, icon: <></>, color: 'red' },
+              { idx: 1, name: playerOne, icon: <></>, color: 'red' },
+              { idx: 2, name: playerTwo, icon: <></>, color: 'red' },
             ]
           : [
-              { name: playerTwo, icon: <></>, color: 'red' },
-              { name: playerOne, icon: <></>, color: 'red' },
+              { idx: 2, name: playerTwo, icon: <></>, color: 'red' },
+              { idx: 1, name: playerOne, icon: <></>, color: 'red' },
             ],
       );
     } else {
       setPlayerName(
         firstPlayPlayer === 1
           ? [
-              { name: playerOne, icon: <></>, color: 'red' },
-              { name: playerTwo, icon: <></>, color: 'red' },
+              { idx: 1, name: playerOne, icon: <></>, color: 'red' },
+              { idx: 2, name: playerTwo, icon: <></>, color: 'red' },
             ]
           : [
-              { name: playerTwo, icon: <></>, color: 'red' },
-              { name: playerOne, icon: <></>, color: 'red' },
+              { idx: 2, name: playerTwo, icon: <></>, color: 'red' },
+              { idx: 1, name: playerOne, icon: <></>, color: 'red' },
             ],
       );
     }
@@ -89,6 +92,13 @@ const Settings = () => {
           <div>
             <label htmlFor="playerOne">플레이어1</label>
             <input ref={playerNameOneRef} />
+            <Select autoFocus={false} value={SVG_LIST[0].value} label="Age" onChange={() => {}}>
+              {SVG_LIST.map((el) => (
+                <MenuItem key={el.value} value={el.value}>
+                  {el.label}
+                </MenuItem>
+              ))}
+            </Select>
             <input
               type="radio"
               id="playerOne"
