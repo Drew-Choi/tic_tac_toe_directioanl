@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
+import { isMobile, isTablet } from 'react-device-detect';
 import Home from './views/main/Home';
 import Settings from './views/main/Settings';
 import Start from './views/main/Start';
@@ -7,8 +8,16 @@ import History from './views/main/History';
 import Container from '@mui/material/Container';
 import Header from './views/header_footer/Header';
 import Footer from './views/header_footer/Footer';
+import { useSetRecoilState } from 'recoil';
+import { isMobileValue } from './recoil/isMobileValue';
 
 function App() {
+  // 모바일체크 전역 설정
+  const setIsMobileValue = useSetRecoilState(isMobileValue);
+  useEffect(() => {
+    setIsMobileValue(() => isTablet || isMobile);
+  }, []);
+
   return (
     <>
       <Header />

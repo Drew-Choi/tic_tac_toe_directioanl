@@ -1,24 +1,66 @@
-import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import Grid from '@mui/material/Unstable_Grid2';
-import React, { ChangeEvent, FormEvent, useRef } from 'react';
-import COLOR_LIST from '../../style/COLOR_LIST';
-import { useSetRecoilState } from 'recoil';
-import { groundInputValue } from '../../recoil/ground';
+import React, { ChangeEvent, FormEvent, useRef, useState } from 'react';
+
+import { useRecoilState, useSetRecoilState } from 'recoil';
+
 import { useNavigate } from 'react-router-dom';
+import { playerName } from '../../recoil/playerName';
+import { gameCondition } from '../../recoil/gameCondition';
 
 const Settings = () => {
-  const inputValueRef = useRef<HTMLInputElement>(null);
-  const setGroundValue = useSetRecoilState(groundInputValue);
+  const playerNameOneRef = useRef<HTMLInputElement>(null);
+  const playerNameTwoRef = useRef<HTMLInputElement>(null);
+  const [gameSettings, setGameSettings] = useRecoilState(gameCondition);
+  const setPlayerName = useSetRecoilState(playerName);
+  const [firstPlayPlayer, setFirstPlayPlayer] = useState<number | null>(null);
+
   const navigate = useNavigate();
 
   const inputHandler = (e: FormEvent) => {
     e.preventDefault();
 
-    if (inputValueRef.current?.value) {
-      setGroundValue(Number(inputValueRef.current.value));
-      navigate('/settings/start');
+    if (!gameSettings.ground) {
+      setGameSettings((cur) => ({ ...cur, ground: 3 }));
     }
+
+    // 플레이어 이름 // 디폴트 설정도 같이
+    const playerOne = playerNameOneRef.current?.value
+      ? playerNameOneRef.current?.value
+      : '플레이어1';
+
+    const playerTwo = playerNameTwoRef.current?.value
+      ? playerNameTwoRef.current?.value
+      : '플레이어2';
+
+    if (!firstPlayPlayer) {
+      const random = Math.floor(Math.random() * 2) + 1;
+
+      setPlayerName(
+        random === 1
+          ? [
+              { name: playerOne, icon: <></>, color: 'red' },
+              { name: playerTwo, icon: <></>, color: 'red' },
+            ]
+          : [
+              { name: playerTwo, icon: <></>, color: 'red' },
+              { name: playerOne, icon: <></>, color: 'red' },
+            ],
+      );
+    } else {
+      setPlayerName(
+        firstPlayPlayer === 1
+          ? [
+              { name: playerOne, icon: <></>, color: 'red' },
+              { name: playerTwo, icon: <></>, color: 'red' },
+            ]
+          : [
+              { name: playerTwo, icon: <></>, color: 'red' },
+              { name: playerOne, icon: <></>, color: 'red' },
+            ],
+      );
+    }
+
+    navigate('/settings/start');
   };
 
   return (
@@ -28,10 +70,64 @@ const Settings = () => {
       sx={{ position: 'relative', boxSizing: 'border-box', width: '100%', padding: '30px' }}
     >
       <Box>
-        <form onSubmit={inputHandler}>
-          <input ref={inputValueRef} type="number" min="3" max="10" />
+        <form
+          style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+          onSubmit={inputHandler}
+        >
+          <div>
+            칸수
+            <input
+              type="number"
+              min="3"
+              max="10"
+              value={!gameSettings.ground ? 3 : gameSettings.ground}
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                setGameSettings((cur) => ({ ...cur, ground: Number(e.target.value) }))
+              }
+            />
+          </div>
+          <div>
+            <label htmlFor="playerOne">플레이어1</label>
+            <input ref={playerNameOneRef} />
+            <input
+              type="radio"
+              id="playerOne"
+              name="choosePlayer"
+              value="1"
+              onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                e.target.checked ? setFirstPlayPlayer(1) : null;
+              }}
+            />
+          </div>
+          <div>
+            <label htmlFor="playerTwo">플레이어2</label>
+            <input ref={playerNameTwoRef} />
+            <input
+              type="radio"
+              id="playerTwo"
+              name="choosePlayer"
+              value="2"
+              onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                e.target.checked ? setFirstPlayPlayer(2) : null;
+              }}
+            />
+          </div>
+          <div>
+            승리조건
+            <input
+              type="number"
+              min="3"
+              max={!gameSettings.ground ? '3' : gameSettings.ground}
+              value={gameSettings.victoryCondition}
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                setGameSettings((cur) => ({ ...cur, victoryCondition: Number(e.target.value) }))
+              }
+            />
+          </div>
           <button type="submit">등록</button>
         </form>
+
+        <br />
       </Box>
     </Box>
   );
