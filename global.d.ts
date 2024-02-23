@@ -11,7 +11,7 @@ declare global {
   interface PlayerNameType {
     idx: number;
     name: string;
-    icon: ReactNode;
+    icon: number;
     color: string;
   }
 }

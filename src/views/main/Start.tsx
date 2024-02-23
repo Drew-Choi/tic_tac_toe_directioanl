@@ -7,6 +7,7 @@ import { useRecoilValue } from 'recoil';
 import { groundDataSet } from '../../recoil/gameCondition';
 import { useIsMobile } from '../../hooks/useIsMobile';
 import { playerName } from '../../recoil/playerName';
+import SVG_LIST from '../../constant/SVG_LIST';
 
 const Start = () => {
   const groundData = useRecoilValue(groundDataSet);
@@ -41,6 +42,17 @@ const Start = () => {
       <Typography textAlign="center" marginBottom="50px">
         게임시작
       </Typography>
+      {/* 플레이어정보 */}
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Typography>{players[0].name}</Typography>{' '}
+          <Box color={players[0].color}>{SVG_LIST[Number(players[0].icon) - 1].label}</Box>
+        </Box>
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Typography>{players[1].name}</Typography>{' '}
+          <Box color={players[1].color}>{SVG_LIST[Number(players[1].icon) - 1].label}</Box>
+        </Box>
+      </Box>
       <CheckBox data={groundData} onClickEvent={(y, x) => boxCheckHandler(y, x)} />
     </Box>
   );

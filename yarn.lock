@@ -1832,6 +1832,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@ctrl/tinycolor@npm:^4.0.3":
+  version: 4.0.3
+  resolution: "@ctrl/tinycolor@npm:4.0.3"
+  checksum: a4cee672c74a2c90b53d06c99bb19d47e0512a2b590f3d453dfa67c8de695c235177eb597cdde0c2ec24e27a888702d7afb785a7ec8e6610e01767be73fbfb92
+  languageName: node
+  linkType: hard
+
 "@emotion/babel-plugin@npm:^11.11.0":
   version: 11.11.0
   resolution: "@emotion/babel-plugin@npm:11.11.0"
@@ -9913,6 +9920,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"mui-color-input@npm:^2.0.3":
+  version: 2.0.3
+  resolution: "mui-color-input@npm:2.0.3"
+  dependencies:
+    "@ctrl/tinycolor": "npm:^4.0.3"
+  peerDependencies:
+    "@emotion/react": ^11.5.0
+    "@emotion/styled": ^11.3.0
+    "@mui/material": ^5.0.0
+    "@types/react": ^18.0.0
+    react: ^18.0.0
+    react-dom: ^18.0.0
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+  checksum: c41242ce07191f22c55a6a1d2553b84fc7fb1c91c377b966977d1b4ef718c4d695a2a553966a786fc69fe1654e4dc0062638533542cb0f71649360e8e266d448
+  languageName: node
+  linkType: hard
+
 "multicast-dns@npm:^7.2.5":
   version: 7.2.5
   resolution: "multicast-dns@npm:7.2.5"
@@ -13347,6 +13373,7 @@ __metadata:
     eslint-config-prettier: "npm:^9.1.0"
     eslint-plugin-prettier: "npm:^5.1.3"
     eslint-plugin-react: "npm:^7.33.2"
+    mui-color-input: "npm:^2.0.3"
     prettier: "npm:^3.2.5"
     react: "npm:^18.2.0"
     react-device-detect: "npm:^2.2.3"

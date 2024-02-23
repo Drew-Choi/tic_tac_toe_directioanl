@@ -12,16 +12,31 @@ import { IoGameControllerOutline } from 'react-icons/io5';
 import { IoHeartOutline } from 'react-icons/io5';
 
 const SVG_LIST: { value: number; label: ReactNode }[] = [
-  { value: 1, label: <FaRegCircle color="inherit" /> },
-  { value: 2, label: <RxCross2 color="inherit" /> },
-  { value: 3, label: <IoTriangleOutline color="inherit" /> },
-  { value: 4, label: <MdOutlineRectangle color="inherit" /> },
-  { value: 5, label: <FaRegStar color="inherit" /> },
-  { value: 6, label: <FiHexagon color="inherit" /> },
-  { value: 7, label: <IoAccessibilityOutline color="inherit" /> },
-  { value: 8, label: <IoAmericanFootballOutline color="inherit" /> },
-  { value: 9, label: <IoGameControllerOutline color="inherit" /> },
-  { value: 10, label: <IoHeartOutline color="inherit" /> },
+  { value: 1, label: <FaRegCircle color="inherit" style={{ transform: 'translateY(10%)' }} /> },
+  { value: 2, label: <RxCross2 color="inherit" style={{ transform: 'translateY(10%)' }} /> },
+  {
+    value: 3,
+    label: <IoTriangleOutline color="inherit" style={{ transform: 'translateY(10%)' }} />,
+  },
+  {
+    value: 4,
+    label: <MdOutlineRectangle color="inherit" style={{ transform: 'translateY(10%)' }} />,
+  },
+  { value: 5, label: <FaRegStar color="inherit" style={{ transform: 'translateY(10%)' }} /> },
+  { value: 6, label: <FiHexagon color="inherit" style={{ transform: 'translateY(10%)' }} /> },
+  {
+    value: 7,
+    label: <IoAccessibilityOutline color="inherit" style={{ transform: 'translateY(10%)' }} />,
+  },
+  {
+    value: 8,
+    label: <IoAmericanFootballOutline color="inherit" style={{ transform: 'translateY(10%)' }} />,
+  },
+  {
+    value: 9,
+    label: <IoGameControllerOutline color="inherit" style={{ transform: 'translateY(10%)' }} />,
+  },
+  { value: 10, label: <IoHeartOutline color="inherit" style={{ transform: 'translateY(10%)' }} /> },
 ];
 
 export default SVG_LIST;
