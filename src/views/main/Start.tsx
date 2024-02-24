@@ -1,28 +1,102 @@
+import React, { useCallback, useState } from 'react';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import Grid from '@mui/material/Unstable_Grid2';
-import React from 'react';
-import COLOR_LIST from '../../style/COLOR_LIST';
 import { useRecoilValue } from 'recoil';
 import { groundDataSet } from '../../recoil/gameCondition';
-import { useIsMobile } from '../../hooks/useIsMobile';
-import { playerName } from '../../recoil/playerName';
-import SVG_LIST from '../../constant/SVG_LIST';
+import { playerInfoChangeIcon } from '../../recoil/player';
+import CheckBox from './Start_Components/CheckBox';
 
 const Start = () => {
-  const groundData = useRecoilValue(groundDataSet);
-  const players = useRecoilValue(playerName);
+  // 초기 그라운드 데이터 셋
+  const groundDataOrigin = useRecoilValue(groundDataSet);
+  const [groundData, setGroundData] = useState<GroundDataType | null | undefined>(groundDataOrigin);
 
-  console.log(players);
+  // 사용자 정보 셋
+  const players = useRecoilValue(playerInfoChangeIcon);
+  // 사용자 마크 히스토리 및 무르기 정보
+  const [playersHistory, setPlayersHistory] = useState<PlayerMarkPositionType>({
+    0: { rollBack: 3, history: [] },
+    1: { rollBack: 3, history: [] },
+  });
 
-  console.log(groundData);
+  // 플레이어 순서 체크 0부터 시작, 사용자는 인덱스로 찾음
+  const [turn, setTurn] = useState<0 | 1 | null>(null);
 
-  const boxCheckHandler = (y: number, x: number) => {
-    console.log('x: ', x);
-    console.log('y: ', y);
-  };
+  // 무르기 있을 시 onClick제어
+  const [onClickEnable, setOnClickEnable] = useState<boolean>(true);
 
-  if (!groundData)
+  // 그라운드 마크 체킹 핸들러
+  const boxCheckHandler = useCallback(
+    (y: number | null, x: number | null) => {
+      if (turn === null) {
+        setTurn(0);
+      }
+
+      if (y !== null && x !== null && groundData && players) {
+        const turnValue = !turn ? 0 : turn;
+
+        setGroundData((cur) => {
+          const newArrLine = [...groundData[y]];
+          newArrLine[x] = turnValue;
+          return { ...cur, [y]: newArrLine };
+        });
+        setPlayersHistory((cur) => ({
+          ...cur,
+          [turnValue]: { ...cur[turnValue], history: [...cur[turnValue].history, { x, y }] },
+        }));
+
+        // 플레이어 롤백체크 후 롤백진행여부
+        if (playersHistory[turnValue].rollBack !== 0) {
+          return setOnClickEnable(false);
+        } else {
+          return setTurn((cur) => (cur === 0 ? 1 : 0));
+        }
+      }
+    },
+    [turn, playersHistory],
+  );
+
+  // 무르기 있을 시 그라운드 마크 여부 핸들러
+  const rollbackHandler = useCallback(
+    (isRollback: boolean) => {
+      // 확정시
+      if (!isRollback) {
+        setTurn((cur) => (cur === 0 ? 1 : 0));
+        setOnClickEnable(true);
+        return;
+      }
+
+      // 무르기시
+      if (isRollback) {
+        const turnValue = !turn ? 0 : turn;
+
+        setGroundData((cur) => {
+          const position =
+            playersHistory[turnValue].history[playersHistory[turnValue].history?.length - 1];
+
+          if (groundData) {
+            const newArrLine = [...groundData[position.y]];
+            newArrLine[position.x] = null;
+            return { ...cur, [position.y]: newArrLine };
+          }
+        });
+
+        setPlayersHistory((cur) => ({
+          ...cur,
+          [turnValue]: {
+            ...cur[turnValue],
+            rollBack: cur[turnValue].rollBack - 1,
+            history: [...cur[turnValue].history].slice(0, -1),
+          },
+        }));
+        setOnClickEnable(true);
+        return;
+      }
+    },
+    [turn, playersHistory],
+  );
+
+  if (!groundData || !players)
     return (
       <Box
         color="white"
@@ -46,114 +120,43 @@ const Start = () => {
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <Typography>{players[0].name}</Typography>{' '}
-          <Box color={players[0].color}>{SVG_LIST[Number(players[0].icon) - 1].label}</Box>
+          <Box color={players[0].color}>{players[0].icon}</Box>{' '}
+          <Typography>{playersHistory[0].rollBack}</Typography>
+          {turn === 0 &&
+            playersHistory[0].rollBack !== 0 &&
+            playersHistory[0].history.length !== 0 &&
+            !onClickEnable && (
+              <>
+                {' '}
+                <button onClick={() => rollbackHandler(false)}>확정</button>
+                <button onClick={() => rollbackHandler(true)}>무르기</button>
+              </>
+            )}
         </Box>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <Typography>{players[1].name}</Typography>{' '}
-          <Box color={players[1].color}>{SVG_LIST[Number(players[1].icon) - 1].label}</Box>
+          <Box color={players[1].color}>{players[1].icon}</Box>{' '}
+          <Typography>{playersHistory[1].rollBack}</Typography>
+          {turn === 1 &&
+            playersHistory[1].rollBack !== 0 &&
+            playersHistory[1].history.length !== 0 &&
+            !onClickEnable && (
+              <>
+                {' '}
+                <button onClick={() => rollbackHandler(false)}>확정</button>
+                <button onClick={() => rollbackHandler(true)}>무르기</button>
+              </>
+            )}
         </Box>
       </Box>
-      <CheckBox data={groundData} onClickEvent={(y, x) => boxCheckHandler(y, x)} />
+      <CheckBox
+        onClickEnable={onClickEnable}
+        groundData={groundData}
+        playerData={players}
+        onClickEvent={(y, x) => (onClickEnable ? boxCheckHandler(y, x) : null)}
+      />
     </Box>
   );
 };
 
 export default Start;
-
-const CheckBox = React.memo(
-  ({
-    data,
-    onClickEvent,
-  }: {
-    data: GroundDataType;
-    onClickEvent?: (y: number, x: number) => void;
-  }) => {
-    // 모바일 체크
-    const isMobile = useIsMobile();
-
-    return (
-      <Grid
-        container
-        sx={{
-          position: 'relative',
-          margin: 'auto',
-        }}
-      >
-        <Grid xs={12}>
-          {Object.keys(data).map((el: string, index: number) => {
-            // 세로 끝 인덱스
-            const lastIndex = Object.keys(data).length - 1;
-
-            return (
-              <Box
-                key={index}
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  borderWidth: Number(el) !== 0 && Number(el) !== lastIndex ? '1px 0 1px 0' : '0',
-                  borderColor: COLOR_LIST.WHITE,
-                  borderStyle: 'solid',
-                }}
-              >
-                {data[Number(el)].map((mark: null | string, markIndex: number) => {
-                  // 가로 끝 인덱스
-                  const lastMarkIndex = data[Number(el)].length - 1;
-                  // 공통 값
-                  const commonBorderWidth = '1px';
-                  const commonBorderRadius = '50px';
-
-                  return (
-                    <Box
-                      onClick={() => onClickEvent && onClickEvent(index, markIndex)}
-                      sx={{
-                        '&:hover': !isMobile
-                          ? {
-                              opacity: '0.5',
-                            }
-                          : null,
-                        flex: '1',
-                        aspectRatio: '1/1',
-                        width: '100%',
-                        borderWidth:
-                          data[Number(el)].length === 3 &&
-                          markIndex !== 0 &&
-                          markIndex !== lastMarkIndex
-                            ? `0 ${commonBorderWidth} 0 ${commonBorderWidth}`
-                            : data[Number(el)].length > 3 &&
-                                markIndex !== 0 &&
-                                markIndex !== lastMarkIndex
-                              ? `0 0 0 ${commonBorderWidth}`
-                              : data[Number(el)].length > 3 && markIndex === lastMarkIndex
-                                ? `0 0 0 ${commonBorderWidth}`
-                                : '0',
-                        borderColor: COLOR_LIST.WHITE,
-                        borderStyle: 'solid',
-                        cursor: 'pointer',
-                        bgcolor: COLOR_LIST.DARK_GRAY,
-                        borderRadius:
-                          index === 0 && markIndex === 0
-                            ? `${commonBorderRadius} 0 0 0`
-                            : index === 0 && markIndex === lastMarkIndex
-                              ? `0 ${commonBorderRadius} 0 0`
-                              : index === lastIndex && markIndex === 0
-                                ? `0 0 0 ${commonBorderRadius}`
-                                : index === lastIndex && markIndex === lastMarkIndex
-                                  ? `0 0 ${commonBorderRadius}`
-                                  : '',
-                      }}
-                      key={`${index}_${markIndex}`}
-                    >
-                      {mark === null ? '' : mark}
-                    </Box>
-                  );
-                })}
-              </Box>
-            );
-          })}
-        </Grid>
-      </Grid>
-    );
-  },
-);
-
-CheckBox.displayName = 'CheckBox';

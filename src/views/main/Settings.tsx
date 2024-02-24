@@ -3,17 +3,17 @@ import React, { ChangeEvent, FormEvent, useCallback, useRef, useState } from 're
 import { MuiColorInput } from 'mui-color-input';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
-import { playerName } from '../../recoil/playerName';
 import { gameCondition } from '../../recoil/gameCondition';
 import SVG_LIST from '../../constant/SVG_LIST';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
+import { playerInfo } from '../../recoil/player';
 
 const Settings = () => {
+  const setPlayerName = useSetRecoilState(playerInfo);
+  const [gameSettings, setGameSettings] = useRecoilState(gameCondition);
   const playerNameOneRef = useRef<HTMLInputElement>(null);
   const playerNameTwoRef = useRef<HTMLInputElement>(null);
-  const [gameSettings, setGameSettings] = useRecoilState(gameCondition);
-  const setPlayerName = useSetRecoilState(playerName);
   const [firstPlayPlayer, setFirstPlayPlayer] = useState<number | null>(null);
   const [selectIcon, setSelectIcon] = useState<{ playerOne: number; playerTwo: number }>({
     playerOne: 1,
@@ -22,7 +22,7 @@ const Settings = () => {
   const [colorPick, setColorPick] = useState<{
     playerOneColor: string;
     playerTwoColor: string;
-  }>({ playerOneColor: '#fefefe', playerTwoColor: '#fefefe' });
+  }>({ playerOneColor: '#3961ff', playerTwoColor: '#ff0000' });
 
   const navigate = useNavigate();
 
@@ -114,7 +114,14 @@ const Settings = () => {
 
       navigate('/settings/start');
     },
-    [gameSettings, firstPlayPlayer, playerNameOneRef, playerNameTwoRef, selectIcon, colorPick],
+    [
+      gameSettings,
+      firstPlayPlayer,
+      playerNameOneRef.current?.value,
+      playerNameTwoRef.current?.value,
+      selectIcon,
+      colorPick,
+    ],
   );
 
   return (

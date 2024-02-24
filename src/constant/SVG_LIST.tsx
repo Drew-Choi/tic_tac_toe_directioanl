@@ -12,8 +12,8 @@ import { IoGameControllerOutline } from 'react-icons/io5';
 import { IoHeartOutline } from 'react-icons/io5';
 
 const SVG_LIST: { value: number; label: ReactNode }[] = [
-  { value: 1, label: <FaRegCircle color="inherit" style={{ transform: 'translateY(10%)' }} /> },
-  { value: 2, label: <RxCross2 color="inherit" style={{ transform: 'translateY(10%)' }} /> },
+  { value: 1, label: <RxCross2 color="inherit" style={{ transform: 'translateY(10%)' }} /> },
+  { value: 2, label: <FaRegCircle color="inherit" style={{ transform: 'translateY(10%)' }} /> },
   {
     value: 3,
     label: <IoTriangleOutline color="inherit" style={{ transform: 'translateY(10%)' }} />,
