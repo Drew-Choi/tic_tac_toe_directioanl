@@ -11,7 +11,6 @@ declare global {
   }
 
   interface PlayerInfoType {
-    idx: number;
     name: string;
     icon: { value: number; label?: ReactNode };
     color: string;

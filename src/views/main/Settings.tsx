@@ -52,13 +52,11 @@ const Settings = () => {
           random === 1
             ? [
                 {
-                  idx: 1,
                   name: playerOne,
                   icon: { value: selectIcon.playerOne },
                   color: colorPick.playerOneColor,
                 },
                 {
-                  idx: 2,
                   name: playerTwo,
                   icon: { value: selectIcon.playerTwo },
                   color: colorPick.playerTwoColor,
@@ -66,13 +64,11 @@ const Settings = () => {
               ]
             : [
                 {
-                  idx: 2,
                   name: playerTwo,
                   icon: { value: selectIcon.playerTwo },
                   color: colorPick.playerTwoColor,
                 },
                 {
-                  idx: 1,
                   name: playerOne,
                   icon: { value: selectIcon.playerOne },
                   color: colorPick.playerOneColor,
@@ -84,13 +80,11 @@ const Settings = () => {
           firstPlayPlayer === 1
             ? [
                 {
-                  idx: 1,
                   name: playerOne,
                   icon: { value: selectIcon.playerOne },
                   color: colorPick.playerOneColor,
                 },
                 {
-                  idx: 2,
                   name: playerTwo,
                   icon: { value: selectIcon.playerTwo },
                   color: colorPick.playerTwoColor,
@@ -98,13 +92,11 @@ const Settings = () => {
               ]
             : [
                 {
-                  idx: 2,
                   name: playerTwo,
                   icon: { value: selectIcon.playerTwo },
                   color: colorPick.playerTwoColor,
                 },
                 {
-                  idx: 1,
                   name: playerOne,
                   icon: { value: selectIcon.playerOne },
                   color: colorPick.playerOneColor,
@@ -167,7 +159,7 @@ const Settings = () => {
             <input
               type="radio"
               id="playerOne"
-              name="choosePlayer"
+              name="choicePlayer"
               value="1"
               onChange={(e: ChangeEvent<HTMLInputElement>) => {
                 e.target.checked ? setFirstPlayPlayer(1) : null;
@@ -193,7 +185,7 @@ const Settings = () => {
             <input
               type="radio"
               id="playerTwo"
-              name="choosePlayer"
+              name="choicePlayer"
               value="2"
               onChange={(e: ChangeEvent<HTMLInputElement>) => {
                 e.target.checked ? setFirstPlayPlayer(2) : null;
