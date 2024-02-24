@@ -11,7 +11,7 @@ const CheckBox = ({
   onClickEvent,
 }: {
   groundData: GroundDataType;
-  playerData: PlayerInfoChangeIconType[];
+  playerData: PlayerInfoType[];
   onClickEnable: boolean;
   onClickEvent?: (y: number, x: number) => void;
 }) => {
@@ -96,7 +96,9 @@ const CheckBox = ({
                     {playerMark === null ? (
                       ''
                     ) : (
-                      <Box color={playerData[playerMark].color}>{playerData[playerMark].icon}</Box>
+                      <Box color={playerData[playerMark].color}>
+                        {playerData[playerMark].icon.label}
+                      </Box>
                     )}
                   </Box>
                 );

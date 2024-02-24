@@ -8,14 +8,17 @@ export const playerInfo = atom<PlayerInfoType[] | []>({
 
 export const playerInfoChangeIcon = selector({
   key: 'playerInfoChangeIcon',
-  get: ({ get }): PlayerInfoChangeIconType[] | null => {
-    const playersInfos: PlayerInfoType[] = get(playerInfo);
+  get: ({ get }): PlayerInfoType[] | null => {
+    const playersInfos = get(playerInfo);
 
     if (!playersInfos) return null;
 
     return playersInfos.map((player) => ({
       ...player,
-      icon: SVG_LIST.find((icon) => icon.value === player.icon)?.label || null,
+      icon: {
+        ...player.icon,
+        label: SVG_LIST.find((icon) => icon.value === player.icon.value)?.label || null,
+      },
     }));
   },
 });

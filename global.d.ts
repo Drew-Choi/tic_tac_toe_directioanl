@@ -13,24 +13,28 @@ declare global {
   interface PlayerInfoType {
     idx: number;
     name: string;
-    icon: number;
+    icon: { value: number; label?: ReactNode };
     color: string;
   }
 
-  interface PlayerInfoChangeIconType extends Omit<PlayerInfoType, 'icon'> {
-    icon: ReactNode | null;
-  }
-
-  interface PlayerMarkPositionType {
+  interface PlayerHistroyType {
     0: {
       rollBack: number;
-      history: { x: number; y: number }[] | [];
+      history: number[][] | [];
     };
     1: {
       rollBack: number;
-      history: { x: number; y: number }[] | [];
+      history: number[][] | [];
     };
   }
+
+  interface LocalStorageHistoryType {
+    players: PlayerInfoType[];
+    ground: number;
+    history: number[][];
+    time: string;
+  }
+  [];
 }
 
 export {};

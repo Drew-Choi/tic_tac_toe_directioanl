@@ -16,19 +16,12 @@ const checkVictory = (playHistory: number[][], victoryValue: number) => {
     { x: {}, y: {} },
   );
 
-  // x와 y축 분리
-  const xGroup = Object.values(axisArrange.x);
-  const yGroup = Object.values(axisArrange.y);
-
-  // 대각선 검사용
-  // 우에서 좌로 갈때,
-  const diagonalLeft = playHistory.map(([x, y]) => x + y);
-  // 좌에서 우로 갈때,
-  const diagonalRight = playHistory.map(([x, y]) => x - y);
-
   // 검사 시작 --------
   // x축 체크(세로빙고)
   if (!result) {
+    // x와 y축 분리
+    const xGroup = Object.values(axisArrange.x);
+
     result = xGroup.some((yValues) => {
       // 겹치는게 3개일 경우만 검사
       if (yValues.length >= victoryValue) {
@@ -43,6 +36,9 @@ const checkVictory = (playHistory: number[][], victoryValue: number) => {
 
   // y축 체크(가로빙고)
   if (!result) {
+    // x와 y축 분리
+    const yGroup = Object.values(axisArrange.y);
+
     result = yGroup.some((xValues) => {
       // 겹치는게 3개일 경우만 검사
       if (xValues.length >= victoryValue) {
@@ -57,6 +53,13 @@ const checkVictory = (playHistory: number[][], victoryValue: number) => {
 
   // x와 y로 안되면 가로축검사
   if (!result) {
+    // 대각선 검사용
+    // 우에서 좌로 갈때,
+    const diagonalLeft = playHistory.map(([x, y]) => x + y);
+
+    // 좌에서 우로 갈때,
+    const diagonalRight = playHistory.map(([x, y]) => x - y);
+
     const preLength = diagonalLeft.length;
     const setLeftLength = new Set(diagonalLeft).size;
     const setRightLength = new Set(diagonalRight).size;

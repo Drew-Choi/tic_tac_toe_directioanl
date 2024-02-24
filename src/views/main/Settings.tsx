@@ -1,13 +1,12 @@
 import Box from '@mui/material/Box';
 import React, { ChangeEvent, FormEvent, useCallback, useRef, useState } from 'react';
-import { MuiColorInput } from 'mui-color-input';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
 import { gameCondition } from '../../recoil/gameCondition';
 import SVG_LIST from '../../constant/SVG_LIST';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
 import { playerInfo } from '../../recoil/player';
+import Selector from '../../components/Selector';
+import ColorPicker from '../../components/ColorPicker';
 
 const Settings = () => {
   const setPlayerName = useSetRecoilState(playerInfo);
@@ -15,10 +14,12 @@ const Settings = () => {
   const playerNameOneRef = useRef<HTMLInputElement>(null);
   const playerNameTwoRef = useRef<HTMLInputElement>(null);
   const [firstPlayPlayer, setFirstPlayPlayer] = useState<number | null>(null);
+  // 마크 선택 기본
   const [selectIcon, setSelectIcon] = useState<{ playerOne: number; playerTwo: number }>({
     playerOne: 1,
     playerTwo: 2,
   });
+  // 컬러피커 기본
   const [colorPick, setColorPick] = useState<{
     playerOneColor: string;
     playerTwoColor: string;
@@ -53,13 +54,13 @@ const Settings = () => {
                 {
                   idx: 1,
                   name: playerOne,
-                  icon: selectIcon.playerOne,
+                  icon: { value: selectIcon.playerOne },
                   color: colorPick.playerOneColor,
                 },
                 {
                   idx: 2,
                   name: playerTwo,
-                  icon: selectIcon.playerTwo,
+                  icon: { value: selectIcon.playerTwo },
                   color: colorPick.playerTwoColor,
                 },
               ]
@@ -67,13 +68,13 @@ const Settings = () => {
                 {
                   idx: 2,
                   name: playerTwo,
-                  icon: selectIcon.playerTwo,
+                  icon: { value: selectIcon.playerTwo },
                   color: colorPick.playerTwoColor,
                 },
                 {
                   idx: 1,
                   name: playerOne,
-                  icon: selectIcon.playerOne,
+                  icon: { value: selectIcon.playerOne },
                   color: colorPick.playerOneColor,
                 },
               ],
@@ -85,13 +86,13 @@ const Settings = () => {
                 {
                   idx: 1,
                   name: playerOne,
-                  icon: selectIcon.playerOne,
+                  icon: { value: selectIcon.playerOne },
                   color: colorPick.playerOneColor,
                 },
                 {
                   idx: 2,
                   name: playerTwo,
-                  icon: selectIcon.playerTwo,
+                  icon: { value: selectIcon.playerTwo },
                   color: colorPick.playerTwoColor,
                 },
               ]
@@ -99,13 +100,13 @@ const Settings = () => {
                 {
                   idx: 2,
                   name: playerTwo,
-                  icon: selectIcon.playerTwo,
+                  icon: { value: selectIcon.playerTwo },
                   color: colorPick.playerTwoColor,
                 },
                 {
                   idx: 1,
                   name: playerOne,
-                  icon: selectIcon.playerOne,
+                  icon: { value: selectIcon.playerOne },
                   color: colorPick.playerOneColor,
                 },
               ],
@@ -150,40 +151,18 @@ const Settings = () => {
           <div>
             <label htmlFor="playerOne">플레이어1</label>
             <input ref={playerNameOneRef} />
-            <Select
-              value={selectIcon.playerOne}
-              onChange={(e) =>
+            <Selector
+              selectData={SVG_LIST}
+              value={String(selectIcon.playerOne)}
+              onChangeEvent={(e) =>
                 setSelectIcon((cur) => ({ ...cur, playerOne: Number(e.target.value) }))
               }
-              sx={{
-                width: '65px',
-                display: 'inline-flex',
-                justifyContent: 'space-evenly',
-                alignItems: 'center',
-                border: 'solid 0.5px #ececec',
-                color: colorPick.playerOneColor,
-                fontSize: '20px',
-              }}
-            >
-              {SVG_LIST.map((el) =>
-                selectIcon.playerTwo !== el.value ? (
-                  <MenuItem key={el.value} value={el.value}>
-                    {el.label}
-                  </MenuItem>
-                ) : (
-                  <MenuItem disabled key={el.value} value={el.value}>
-                    {el.label}
-                  </MenuItem>
-                ),
-              )}
-            </Select>
-            <MuiColorInput
-              sx={{ border: 'solid 0.5px white', borderRadius: '5px', padding: '20px 10px' }}
+              disableValue={String(selectIcon.playerTwo)}
+              activeColor={colorPick.playerOneColor}
+            />
+            <ColorPicker
               value={colorPick.playerOneColor}
-              format="hex"
-              size="small"
-              variant="outlined"
-              onChange={(color) => setColorPick((cur) => ({ ...cur, playerOneColor: color }))}
+              onChangeEvent={(color) => setColorPick((cur) => ({ ...cur, playerOneColor: color }))}
             />
             <input
               type="radio"
@@ -198,40 +177,18 @@ const Settings = () => {
           <div>
             <label htmlFor="playerTwo">플레이어2</label>
             <input ref={playerNameTwoRef} />
-            <Select
-              value={selectIcon.playerTwo}
-              onChange={(e) =>
+            <Selector
+              selectData={SVG_LIST}
+              value={String(selectIcon.playerTwo)}
+              onChangeEvent={(e) =>
                 setSelectIcon((cur) => ({ ...cur, playerTwo: Number(e.target.value) }))
               }
-              sx={{
-                width: '65px',
-                display: 'inline-flex',
-                justifyContent: 'space-evenly',
-                alignItems: 'center',
-                border: 'solid 0.5px #ececec',
-                color: colorPick.playerTwoColor,
-                fontSize: '20px',
-              }}
-            >
-              {SVG_LIST.map((el) =>
-                selectIcon.playerOne !== el.value ? (
-                  <MenuItem key={el.value} value={el.value}>
-                    {el.label}
-                  </MenuItem>
-                ) : (
-                  <MenuItem disabled key={el.value} value={el.value}>
-                    {el.label}
-                  </MenuItem>
-                ),
-              )}
-            </Select>
-            <MuiColorInput
-              sx={{ border: 'solid 0.5px white', borderRadius: '5px', padding: '20px 10px' }}
+              disableValue={String(selectIcon.playerOne)}
+              activeColor={colorPick.playerTwoColor}
+            />
+            <ColorPicker
               value={colorPick.playerTwoColor}
-              format="hex"
-              size="small"
-              variant="outlined"
-              onChange={(color) => setColorPick((cur) => ({ ...cur, playerTwoColor: color }))}
+              onChangeEvent={(color) => setColorPick((cur) => ({ ...cur, playerTwoColor: color }))}
             />
             <input
               type="radio"
