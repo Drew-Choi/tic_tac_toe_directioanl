@@ -7,6 +7,7 @@ import { playerInfoChangeIcon } from '../../recoil/player';
 import CheckBox from './Start_Components/CheckBox';
 import checkVictory from '../../utils/checkVictory';
 import { nowDayAndTimeOnlyNumber } from '../../utils/generateDate';
+import { ROLLBACK_COUNT } from '../../constant/COUNT_NUMBER';
 
 const Start = () => {
   // 게임 종료 여부
@@ -26,8 +27,8 @@ const Start = () => {
   const players = useRecoilValue(playerInfoChangeIcon);
   // 사용자 마크 히스토리 및 무르기 정보
   const [playersHistory, setPlayersHistory] = useState<PlayerHistroyType>({
-    0: { rollBack: 3, history: [] },
-    1: { rollBack: 3, history: [] },
+    0: { rollBack: ROLLBACK_COUNT, history: [] },
+    1: { rollBack: ROLLBACK_COUNT, history: [] },
   });
 
   // 무르기 있을 시 onClick제어
@@ -35,6 +36,10 @@ const Start = () => {
 
   // 플레이어 순서 체크 0부터 시작, 사용자는 인덱스로 찾음
   const [turn, setTurn] = useState<0 | 1 | null>(null);
+  // 전체 카운트, 무승부 체크용 (0이 되어도 승부가 안나면 무승부)
+  const [totalTurn, setTotalTurn] = useState<number | null>(
+    gameConditionData?.ground ? gameConditionData?.ground * gameConditionData?.ground : null,
+  );
 
   // 그라운드 마크 체킹 핸들러
   const boxCheckHandler = useCallback(
@@ -51,6 +56,7 @@ const Start = () => {
           newArrLine[x] = turnValue;
           return { ...cur, [y]: newArrLine };
         });
+
         setPlayersHistory((cur) => ({
           ...cur,
           [turnValue]: { ...cur[turnValue], history: [...cur[turnValue].history, [x, y]] },
@@ -67,7 +73,14 @@ const Start = () => {
               ? checkVictory(addDataList, gameConditionData.victoryCondition)
               : { win: false, victoryPosition: [] };
 
-          if (!win) return setTurn((cur) => (cur === 0 ? 1 : 0));
+          // 승리조건 아니면 턴이동 진행
+          if (!win) {
+            setTurn((cur) => (cur === 0 ? 1 : 0));
+            setTotalTurn((cur) => (cur !== null ? cur - 1 : null));
+            return;
+          }
+
+          // 승리조건이면 해당 사항 저장(승리 마크 포지션 등)
           setIsEndGame((cur) => ({
             ...cur,
             win,
@@ -83,7 +96,8 @@ const Start = () => {
   const rollbackHandler = useCallback(
     (isRollback: boolean) => {
       const turnValue = !turn ? 0 : turn;
-      // 확정시
+
+      // 확정시(무르기x) ------
       if (!isRollback) {
         // 승리여부체크
         const { win, victoryPosition }: CheckVictoryReturnType =
@@ -92,15 +106,19 @@ const Start = () => {
             ? checkVictory(playersHistory[turnValue].history, gameConditionData.victoryCondition)
             : { win: false, victoryPosition: [] };
 
+        // 승리조건이 아닐 때
         if (!win) {
           setTurn((cur) => (cur === 0 ? 1 : 0));
+          setTotalTurn((cur) => (cur !== null ? cur - 1 : null));
           setOnClickEnable(true);
           return;
         }
+
+        // 승리조건일 경우
         setIsEndGame((cur) => ({ ...cur, win, victoryPosition }));
       }
 
-      // 무르기시
+      // 무르기시 ---------
       if (isRollback) {
         setGroundData((cur) => {
           const position =
@@ -128,16 +146,16 @@ const Start = () => {
     [turn, playersHistory],
   );
 
-  // 게임 승자 확정시 컨트롤용
-  useEffect(() => {
-    if (!isEndGame.win) return;
-
-    setOnClickEnable(false);
-
-    const time = setTimeout(() => {
-      const turnValue = !turn ? 0 : turn;
-      alert(`${players ? players[turnValue].name : ''} 승리!`);
-
+  // 게임 종료시 사용  -----
+  // 승자 데이터 저장 함수 // winnerValue 2는 무승부
+  const saveVictoryInfo = useCallback(
+    ({
+      winnerValue,
+      victoryPosition,
+    }: {
+      winnerValue: 0 | 1 | 2;
+      victoryPosition: number[][] | [];
+    }) => {
       // 히스토리 저장
       // 통합한 히스토리라인 생성
       const firstHistory = playersHistory[0].history;
@@ -168,8 +186,8 @@ const Start = () => {
           : [],
         gameCondition: gameConditionData,
         history: newHistoryLine,
-        winner: turnValue,
-        victoryPosition: isEndGame.victoryPosition,
+        winner: winnerValue,
+        victoryPosition,
         time: nowDayAndTimeOnlyNumber({ format: 'YYYY/MM/DD/HH:mm' }),
       };
 
@@ -182,12 +200,37 @@ const Start = () => {
       } else {
         localStorage.setItem('history', JSON.stringify([newHistoryData]));
       }
+    },
+    [totalTurn, isEndGame.win],
+  );
+
+  // 게임 승자 확정시 컨트롤용
+  useEffect(() => {
+    if (!isEndGame.win) return;
+
+    setOnClickEnable(false);
+
+    const time = setTimeout(() => {
+      const turnValue = !turn ? 0 : turn;
+      alert(`${players ? players[turnValue].name : ''} 승리!`);
+      saveVictoryInfo({ winnerValue: turnValue, victoryPosition: isEndGame.victoryPosition });
     }, 500);
 
     return () => {
       clearTimeout(time);
     };
   }, [isEndGame.win]);
+
+  // 게임 무승부시 작동
+  useEffect(() => {
+    if (totalTurn !== 0) return;
+
+    if (!isEndGame.win && totalTurn === 0) {
+      setOnClickEnable(false);
+      alert(`무승부 `);
+      saveVictoryInfo({ winnerValue: 2, victoryPosition: [] });
+    }
+  }, [totalTurn]);
 
   if (!groundData || !players)
     return (
@@ -244,6 +287,7 @@ const Start = () => {
             )}
         </Box>
       </Box>
+      {/* 게임 본문 */}
       <CheckBox
         isEndGame={isEndGame}
         onClickEnable={onClickEnable}

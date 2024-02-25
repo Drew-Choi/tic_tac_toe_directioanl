@@ -31,7 +31,7 @@ declare global {
     players: PlayerInfoType[];
     gameCondition: GameConditionType;
     history: number[][];
-    winner: 0 | 1;
+    winner: 0 | 1 | 2;
     victoryPosition: number[][];
     time: string;
   }
