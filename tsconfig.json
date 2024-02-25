@@ -22,7 +22,8 @@
     "**/*.ts",
     "**/*.tsx",
     "src/constant/SVG_LIST.tsㅌ",
-    "src/recoil/player.ts"
+    "src/recoil/player.ts",
+    "src/constant/COUNT_NUMBER.ts"
   ],
   "exclude": ["node_modules"]
 }

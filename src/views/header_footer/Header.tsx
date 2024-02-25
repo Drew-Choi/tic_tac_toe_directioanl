@@ -1,15 +1,50 @@
 import Container from '@mui/material/Container';
 import React from 'react';
+import COLOR_LIST from '../../style/COLOR_LIST';
+import { Typography } from '@mui/material';
+import ButtonBack from '../../components/ButtonBack';
+import { useLocation } from 'react-router-dom';
+import { useSetRecoilState } from 'recoil';
+import { gameCondition } from '../../recoil/gameCondition';
+import { playerInfo } from '../../recoil/player';
 
 const Header = () => {
+  const pathName = useLocation().pathname;
+  // 게임 중 뒤로가기 초기화
+  const setGameCondition = useSetRecoilState(gameCondition);
+  const setPlayInfo = useSetRecoilState(playerInfo);
+
   return (
     <Container
-      className="App"
       component="header"
       maxWidth="md"
-      sx={{ position: 'relative', bgcolor: 'beige' }}
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        position: 'relative',
+        boxSizing: 'border-box',
+        height: '10vh',
+        bgcolor: COLOR_LIST.DARK_GRAY,
+        color: COLOR_LIST.WHITE,
+        borderRadius: '50px 50px 0 0',
+      }}
     >
-      Header
+      {pathName !== '/' && (
+        <ButtonBack
+          sx={{ position: 'absolute', left: '20px' }}
+          addEvents={() => {
+            // 게임 중 뒤로가기 초기화
+            if (pathName === '/settings/start') {
+              setGameCondition((cur) => ({ ...cur, victoryCondition: 3, ground: null }));
+              setPlayInfo([]);
+            }
+          }}
+        />
+      )}
+      <Typography textAlign="center" fontSize="20px" fontWeight={600}>
+        Tic Tac Toe Game
+      </Typography>
     </Container>
   );
 };

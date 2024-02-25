@@ -105,7 +105,23 @@ const CheckBox = ({
                     {playerMark === null ? (
                       ''
                     ) : (
-                      <Box color={playerData[playerMark].color}>
+                      <Box
+                        color={playerData[playerMark].color}
+                        sx={{
+                          width: '100%',
+                          height: '100%',
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          svg: {
+                            viewBox: '0 0 100 100',
+                            width: '60%',
+                            height: 'auto',
+                            // fontSize: { xs: '15vw', md: '1em' },
+                            // transform: 'translateY(10%)',
+                          },
+                        }}
+                      >
                         {playerData[playerMark].icon.label}
                       </Box>
                     )}

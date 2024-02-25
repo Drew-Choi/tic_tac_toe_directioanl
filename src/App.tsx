@@ -10,6 +10,7 @@ import Header from './views/header_footer/Header';
 import Footer from './views/header_footer/Footer';
 import { useSetRecoilState } from 'recoil';
 import { isMobileValue } from './recoil/isMobileValue';
+import COLOR_LIST from './style/COLOR_LIST';
 
 function App() {
   // 모바일체크 전역 설정
@@ -25,7 +26,12 @@ function App() {
         className="App"
         component="main"
         maxWidth="md"
-        sx={{ flex: '9', position: 'relative' }}
+        sx={{
+          position: 'relative',
+          minHeight: '80vh',
+          borderRight: '1px solid' + COLOR_LIST.DARK_GRAY,
+          borderLeft: '1px solid' + COLOR_LIST.DARK_GRAY,
+        }}
       >
         <Routes>
           <Route path="/" element={<Home />} />

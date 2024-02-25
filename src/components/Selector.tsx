@@ -2,7 +2,7 @@ import { SxProps } from '@mui/material';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import React, { ReactNode } from 'react';
 import MenuItem from '@mui/material/MenuItem';
-
+//MuiSlider-markLabel MuiSlider-markLabel MuiSlider-markLabelActive css-1eoe787-MuiSlider-markLabel
 type SelectotPropsType = {
   value: string;
   onChangeEvent: (e: SelectChangeEvent<string>) => void;
@@ -34,6 +34,26 @@ const Selector = ({
         border: 'solid 0.5px #ececec',
         color: activeColor ? activeColor : 'black',
         fontSize: '20px',
+        // mui selectCustom
+        '.MuiOutlinedInput-notchedOutline.css-1d3z3hw-MuiOutlinedInput-notchedOutline': {
+          display: 'none',
+        },
+        '.MuiSelect-nativeInput.css-yf8vq0-MuiSelect-nativeInput': {
+          display: 'none',
+        },
+        '.MuiSelect-select.MuiSelect-outlined.MuiInputBase-input.MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input':
+          {
+            padding: '5px 30px 5px 10px',
+          },
+        '.MuiSelect-select.MuiSelect-outlined.MuiInputBase-input.MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input svg':
+          {
+            position: 'relative',
+            transform: 'translateY(10%)',
+          },
+        '.MuiSvgIcon-root.MuiSvgIcon-fontSizeMedium.MuiSelect-icon.MuiSelect-iconOutlined.css-hfutr2-MuiSvgIcon-root-MuiSelect-icon':
+          {
+            color: 'white',
+          },
         ...containerSx,
       }}
     >

@@ -8,6 +8,8 @@ import CheckBox from './Start_Components/CheckBox';
 import checkVictory from '../../utils/checkVictory';
 import { nowDayAndTimeOnlyNumber } from '../../utils/generateDate';
 import { ROLLBACK_COUNT } from '../../constant/COUNT_NUMBER';
+import ButtonNormal from '../../components/ButtonNormal';
+import COLOR_LIST from '../../style/COLOR_LIST';
 
 const Start = () => {
   // 게임 종료 여부
@@ -237,7 +239,12 @@ const Start = () => {
       <Box
         color="white"
         component="section"
-        sx={{ position: 'relative', boxSizing: 'border-box', width: '100%', padding: '30px' }}
+        sx={{
+          position: 'relative',
+          boxSizing: 'border-box',
+          width: '100%',
+          padding: '30px',
+        }}
       >
         <Typography>세팅값을 입력해주세요.</Typography>
       </Box>
@@ -247,46 +254,93 @@ const Start = () => {
     <Box
       color="white"
       component="section"
-      sx={{ position: 'relative', boxSizing: 'border-box', width: '100%', padding: '30px' }}
+      sx={{
+        position: 'relative',
+        boxSizing: 'border-box',
+        width: '100%',
+        padding: { xs: '30px 10px', md: '30px' },
+      }}
     >
-      <Typography textAlign="center" marginBottom="50px">
-        게임시작
+      <Typography textAlign="center" marginBottom="50px" fontSize="25px">
+        {isEndGame.win || totalTurn === 0 ? 'END' : 'START'}
       </Typography>
       {/* 플레이어정보 */}
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Typography>{players[0].name}</Typography>{' '}
-          <Box color={players[0].color}>{players[0].icon.label}</Box>{' '}
-          <Typography>{playersHistory[0].rollBack}</Typography>
-          {turn === 0 &&
-            playersHistory[0].rollBack !== 0 &&
-            playersHistory[0].history.length !== 0 &&
-            !isEndGame.win &&
-            !onClickEnable && (
-              <>
-                {' '}
-                <button onClick={() => rollbackHandler(false)}>확정</button>
-                <button onClick={() => rollbackHandler(true)}>무르기</button>
-              </>
-            )}
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'flex-start',
+          height: { xs: '120px', sm: '70px' },
+        }}
+      >
+        <Box>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <Typography gutterBottom>{players[0]?.name}</Typography>
+            <Box color={players[0]?.color}>{players[0]?.icon.label}</Box>
+            <Typography sx={{ display: { xs: 'none', sm: 'block' } }}>
+              <span style={{ fontSize: '12px' }}>무르기 남은 횟수: </span>
+              {playersHistory[0]?.rollBack}
+            </Typography>
+          </Box>
+          {/* 반응형 위치 변경 */}
+          <Typography sx={{ display: { xs: 'block', sm: 'none' } }}>
+            <span style={{ fontSize: '12px' }}>무르기 남은 횟수: </span>
+            {playersHistory[0].rollBack}
+          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            {turn === 0 &&
+              playersHistory[0].rollBack !== 0 &&
+              playersHistory[0].history.length !== 0 &&
+              !isEndGame.win &&
+              !onClickEnable && (
+                <Box sx={{ display: 'flex', gap: '10px' }}>
+                  <ButtonNormal onClickEvent={() => rollbackHandler(false)}>확정</ButtonNormal>
+                  <ButtonNormal
+                    onClickEvent={() => rollbackHandler(true)}
+                    sx={{ borderColor: COLOR_LIST.PINK }}
+                  >
+                    무르기
+                  </ButtonNormal>
+                </Box>
+              )}
+          </Box>
         </Box>
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Typography>{players[1].name}</Typography>{' '}
-          <Box color={players[1].color}>{players[1].icon.label}</Box>{' '}
-          <Typography>{playersHistory[1].rollBack}</Typography>
-          {turn === 1 &&
-            playersHistory[1].rollBack !== 0 &&
-            playersHistory[1].history.length !== 0 &&
-            !isEndGame.win &&
-            !onClickEnable && (
-              <>
-                {' '}
-                <button onClick={() => rollbackHandler(false)}>확정</button>
-                <button onClick={() => rollbackHandler(true)}>무르기</button>
-              </>
-            )}
+
+        <Box>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px', justifyContent: 'right' }}>
+            <Typography sx={{ display: { xs: 'none', sm: 'block' } }}>
+              <span style={{ fontSize: '12px' }}>무르기 남은 횟수: </span>
+              {playersHistory[1].rollBack}
+            </Typography>
+            <Typography gutterBottom>{players[1]?.name}</Typography>
+            <Box color={players[1]?.color}>{players[1]?.icon.label}</Box>
+          </Box>
+          {/* 반응형 위치 변경 */}
+          <Typography sx={{ display: { xs: 'block', sm: 'none' } }}>
+            <span style={{ fontSize: '12px' }}>무르기 남은 횟수: </span>
+            {playersHistory[1].rollBack}
+          </Typography>
+
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px', justifyContent: 'right' }}>
+            {turn === 1 &&
+              playersHistory[1].rollBack !== 0 &&
+              playersHistory[1].history.length !== 0 &&
+              !isEndGame.win &&
+              !onClickEnable && (
+                <Box sx={{ display: 'flex', gap: '10px' }}>
+                  <ButtonNormal
+                    onClickEvent={() => rollbackHandler(true)}
+                    sx={{ borderColor: COLOR_LIST.PINK }}
+                  >
+                    무르기
+                  </ButtonNormal>
+                  <ButtonNormal onClickEvent={() => rollbackHandler(false)}>확정</ButtonNormal>
+                </Box>
+              )}
+          </Box>
         </Box>
       </Box>
+
       {/* 게임 본문 */}
       <CheckBox
         isEndGame={isEndGame}

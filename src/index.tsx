@@ -15,39 +15,6 @@ const globalStyle: { [key: string]: CSSProperties } = {
   },
   p: { margin: '0' },
   a: { textDecoration: 'none', color: 'inherit' },
-  // mui selectCustom
-  '.MuiOutlinedInput-notchedOutline.css-1d3z3hw-MuiOutlinedInput-notchedOutline': {
-    display: 'none',
-  },
-  '.MuiSelect-nativeInput.css-yf8vq0-MuiSelect-nativeInput': {
-    display: 'none',
-  },
-  '.MuiSelect-select.MuiSelect-outlined.MuiInputBase-input.MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input':
-    {
-      padding: '5px 30px 5px 10px',
-    },
-  '.MuiSelect-select.MuiSelect-outlined.MuiInputBase-input.MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input svg':
-    {
-      position: 'relative',
-      transform: 'translateY(10%)',
-    },
-  '.MuiSvgIcon-root.MuiSvgIcon-fontSizeMedium.MuiSelect-icon.MuiSelect-iconOutlined.css-hfutr2-MuiSvgIcon-root-MuiSelect-icon':
-    {
-      color: 'white',
-    },
-  // 컬러피커
-  '.MuiInputBase-input.MuiOutlinedInput-input.MuiInputBase-inputSizeSmall.MuiInputBase-inputAdornedStart.css-1ua80n0-MuiInputBase-input-MuiOutlinedInput-input':
-    {
-      display: 'none',
-    },
-  '.MuiInputBase-root.MuiOutlinedInput-root.MuiInputBase-colorPrimary.MuiInputBase-formControl.MuiInputBase-sizeSmall.MuiInputBase-adornedStart.css-1q6at85-MuiInputBase-root-MuiOutlinedInput-root':
-    {
-      padding: '0',
-    },
-  '.MuiInputAdornment-root.MuiInputAdornment-positionStart.MuiInputAdornment-outlined.MuiInputAdornment-sizeSmall.css-ittuaa-MuiInputAdornment-root':
-    {
-      margin: '0',
-    },
 };
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);

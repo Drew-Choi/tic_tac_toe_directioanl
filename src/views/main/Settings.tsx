@@ -5,8 +5,11 @@ import { useNavigate } from 'react-router-dom';
 import { gameCondition } from '../../recoil/gameCondition';
 import SVG_LIST from '../../constant/SVG_LIST';
 import { playerInfo } from '../../recoil/player';
-import Selector from '../../components/Selector';
-import ColorPicker from '../../components/ColorPicker';
+import Typography from '@mui/material/Typography';
+import SliderCustom from '../../components/SliderCustom';
+import { GROUND_SETTING_VALUE } from '../../constant/COUNT_NUMBER';
+import PlayersSettingBox from './Settings_Components/PlayersSettingBox';
+import ButtonNormal from '../../components/ButtonNormal';
 
 const Settings = () => {
   const setPlayerName = useSetRecoilState(playerInfo);
@@ -14,6 +17,7 @@ const Settings = () => {
   const playerNameOneRef = useRef<HTMLInputElement>(null);
   const playerNameTwoRef = useRef<HTMLInputElement>(null);
   const [firstPlayPlayer, setFirstPlayPlayer] = useState<number | null>(null);
+
   // 마크 선택 기본
   const [selectIcon, setSelectIcon] = useState<{ playerOne: number; playerTwo: number }>({
     playerOne: 1,
@@ -121,93 +125,91 @@ const Settings = () => {
     <Box
       color="white"
       component="section"
-      sx={{ position: 'relative', boxSizing: 'border-box', width: '100%', padding: '30px' }}
+      sx={{
+        position: 'relative',
+        boxSizing: 'border-box',
+        width: '100%',
+        padding: { xs: '30px 10px', sm: '30px 50px', md: '30px 100px' },
+      }}
     >
-      <Box>
-        <form
-          style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
-          onSubmit={inputHandler}
-        >
-          <div>
-            칸수
-            <input
-              type="number"
-              min="3"
-              max="10"
-              value={!gameSettings.ground ? 3 : gameSettings.ground}
-              onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                setGameSettings((cur) => ({ ...cur, ground: Number(e.target.value) }))
-              }
-            />
-          </div>
-          <div>
-            <label htmlFor="playerOne">플레이어1</label>
-            <input ref={playerNameOneRef} />
-            <Selector
-              selectData={SVG_LIST}
-              value={String(selectIcon.playerOne)}
-              onChangeEvent={(e) =>
-                setSelectIcon((cur) => ({ ...cur, playerOne: Number(e.target.value) }))
-              }
-              disableValue={selectIcon.playerTwo}
-              activeColor={colorPick.playerOneColor}
-            />
-            <ColorPicker
-              value={colorPick.playerOneColor}
-              onChangeEvent={(color) => setColorPick((cur) => ({ ...cur, playerOneColor: color }))}
-            />
-            <input
-              type="radio"
-              id="playerOne"
-              name="choicePlayer"
-              value="1"
-              onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                e.target.checked ? setFirstPlayPlayer(1) : null;
-              }}
-            />
-          </div>
-          <div>
-            <label htmlFor="playerTwo">플레이어2</label>
-            <input ref={playerNameTwoRef} />
-            <Selector
-              selectData={SVG_LIST}
-              value={String(selectIcon.playerTwo)}
-              onChangeEvent={(e) =>
-                setSelectIcon((cur) => ({ ...cur, playerTwo: Number(e.target.value) }))
-              }
-              disableValue={selectIcon.playerOne}
-              activeColor={colorPick.playerTwoColor}
-            />
-            <ColorPicker
-              value={colorPick.playerTwoColor}
-              onChangeEvent={(color) => setColorPick((cur) => ({ ...cur, playerTwoColor: color }))}
-            />
-            <input
-              type="radio"
-              id="playerTwo"
-              name="choicePlayer"
-              value="2"
-              onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                e.target.checked ? setFirstPlayPlayer(2) : null;
-              }}
-            />
-          </div>
-          <div>
-            승리조건
-            <input
-              type="number"
-              min="3"
-              max={!gameSettings.ground ? '3' : gameSettings.ground}
-              value={gameSettings.victoryCondition}
-              onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                setGameSettings((cur) => ({ ...cur, victoryCondition: Number(e.target.value) }))
-              }
-            />
-          </div>
-          <button type="submit">등록</button>
-        </form>
+      <Box
+        component="form"
+        style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '50px' }}
+        onSubmit={inputHandler}
+      >
+        <Box sx={{ width: '100%' }}>
+          <Typography>게임판 설정 -</Typography>
+          <SliderCustom
+            marks={GROUND_SETTING_VALUE}
+            sx={{ width: '98%', left: '50%', transform: 'translateX(-50%)' }}
+            onChangeEvent={(_, value) =>
+              setGameSettings((cur) => ({ ...cur, ground: Number(value) }))
+            }
+          />
+        </Box>
+        <Box sx={{ width: '100%' }}>
+          <Typography sx={{ marginBottom: '30px' }}>승리조건 설정 -</Typography>
+          <SliderCustom
+            valueLabelDisplay="on"
+            marks={true}
+            min={3}
+            max={!gameSettings.ground ? 3 : gameSettings.ground}
+            sx={{ width: '98%', left: '50%', transform: 'translateX(-50%)' }}
+            onChangeEvent={(_, value) =>
+              setGameSettings((cur) => ({ ...cur, victoryCondition: Number(value) }))
+            }
+          />
+        </Box>
 
-        <br />
+        <PlayersSettingBox
+          playerNameRef={playerNameOneRef}
+          inputLabel="PLAYER 1"
+          selectData={SVG_LIST}
+          selectValue={String(selectIcon.playerOne)}
+          onChangeSelector={(e) =>
+            setSelectIcon((cur) => ({ ...cur, playerOne: Number(e.target.value) }))
+          }
+          selectDisableValue={selectIcon.playerTwo}
+          selectActiveColor={colorPick.playerOneColor}
+          colorPickerValue={colorPick.playerOneColor}
+          onChangeColorPicker={(color) =>
+            setColorPick((cur) => ({ ...cur, playerOneColor: color }))
+          }
+          radioChecked={String(firstPlayPlayer) === '1'}
+          radioId="playerOne"
+          radioName="choicePlayer"
+          radioValue="1"
+          onChangeRadio={(e: ChangeEvent<HTMLInputElement>) => {
+            e.target.checked ? setFirstPlayPlayer(1) : null;
+          }}
+        />
+
+        <PlayersSettingBox
+          containerSx={{ marginBottom: '50px' }}
+          playerNameRef={playerNameTwoRef}
+          inputLabel="PLAYER 2"
+          selectData={SVG_LIST}
+          selectValue={String(selectIcon.playerTwo)}
+          onChangeSelector={(e) =>
+            setSelectIcon((cur) => ({ ...cur, playerTwo: Number(e.target.value) }))
+          }
+          selectDisableValue={selectIcon.playerOne}
+          selectActiveColor={colorPick.playerTwoColor}
+          colorPickerValue={colorPick.playerTwoColor}
+          onChangeColorPicker={(color) =>
+            setColorPick((cur) => ({ ...cur, playerTwoColor: color }))
+          }
+          radioChecked={String(firstPlayPlayer) === '2'}
+          radioId="playerTwo"
+          radioName="choicePlayer"
+          radioValue="2"
+          onChangeRadio={(e: ChangeEvent<HTMLInputElement>) => {
+            e.target.checked ? setFirstPlayPlayer(2) : null;
+          }}
+        />
+        <ButtonNormal size="large" type="submit" sx={{ fontSize: '20px' }}>
+          게임시작
+        </ButtonNormal>
       </Box>
     </Box>
   );
