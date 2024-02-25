@@ -29,11 +29,24 @@ declare global {
 
   interface LocalStorageHistoryType {
     players: PlayerInfoType[];
-    ground: number;
+    gameCondition: GameConditionType;
     history: number[][];
+    winner: 0 | 1;
+    victoryPosition: number[][];
     time: string;
   }
   [];
+
+  interface HistoryGroundDataType {
+    [key: number]: (null | { player: { iconLabel: ReactNode; color: string }; index: number })[];
+  }
+
+  type HistoryGroundDataIndividualType = null | {
+    player: { iconLabel: ReactNode; color: string };
+    index: number;
+  };
+
+  type CheckVictoryReturnType = { win: boolean; victoryPosition: number[][] };
 }
 
 export {};

@@ -149,7 +149,7 @@ const Settings = () => {
               onChangeEvent={(e) =>
                 setSelectIcon((cur) => ({ ...cur, playerOne: Number(e.target.value) }))
               }
-              disableValue={String(selectIcon.playerTwo)}
+              disableValue={selectIcon.playerTwo}
               activeColor={colorPick.playerOneColor}
             />
             <ColorPicker
@@ -175,7 +175,7 @@ const Settings = () => {
               onChangeEvent={(e) =>
                 setSelectIcon((cur) => ({ ...cur, playerTwo: Number(e.target.value) }))
               }
-              disableValue={String(selectIcon.playerOne)}
+              disableValue={selectIcon.playerOne}
               activeColor={colorPick.playerTwoColor}
             />
             <ColorPicker

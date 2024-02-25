@@ -9,7 +9,7 @@ type SelectotPropsType = {
   selectData: { value: number | string; label: string | number | ReactNode }[];
   activeColor?: string;
   containerSx?: SxProps;
-  disableValue?: string;
+  disableValue?: number;
   dropMenuSx?: SxProps;
 };
 
@@ -38,8 +38,8 @@ const Selector = ({
       }}
     >
       {selectData.map((el) =>
-        disableValue ? (
-          disableValue !== el.value ? (
+        disableValue !== undefined ? (
+          Number(disableValue) !== el.value ? (
             <MenuItem key={el.value} value={el.value} sx={{ ...dropMenuSx }}>
               {el.label}
             </MenuItem>

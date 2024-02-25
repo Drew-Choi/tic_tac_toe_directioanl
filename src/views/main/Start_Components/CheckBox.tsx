@@ -9,10 +9,12 @@ const CheckBox = ({
   playerData,
   onClickEnable,
   onClickEvent,
+  isEndGame,
 }: {
   groundData: GroundDataType;
   playerData: PlayerInfoType[];
   onClickEnable: boolean;
+  isEndGame: CheckVictoryReturnType;
   onClickEvent?: (y: number, x: number) => void;
 }) => {
   // 모바일 체크
@@ -48,6 +50,13 @@ const CheckBox = ({
                 // 공통 값
                 const commonBorderWidth = '1px';
                 const commonBorderRadius = '50px';
+                // 빙고 체크
+                const isBingo =
+                  isEndGame.victoryPosition?.filter(
+                    (el) => el[0] === playerMarkIndex && el[1] === index,
+                  ).length === 0
+                    ? false
+                    : true;
 
                 return (
                   <Box
@@ -79,7 +88,7 @@ const CheckBox = ({
                       borderColor: COLOR_LIST.WHITE,
                       borderStyle: 'solid',
                       cursor: 'pointer',
-                      bgcolor: COLOR_LIST.DARK_GRAY,
+                      bgcolor: !isBingo ? COLOR_LIST.DARK_GRAY : COLOR_LIST.PINK,
                       borderRadius:
                         index === 0 && playerMarkIndex === 0
                           ? `${commonBorderRadius} 0 0 0`

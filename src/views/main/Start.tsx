@@ -10,14 +10,17 @@ import { nowDayAndTimeOnlyNumber } from '../../utils/generateDate';
 
 const Start = () => {
   // 게임 종료 여부
-  const [isEndGame, setIsEndGame] = useState<boolean>(false);
+  const [isEndGame, setIsEndGame] = useState<CheckVictoryReturnType>({
+    win: false,
+    victoryPosition: [],
+  });
 
   // 초기 그라운드 데이터 셋
   const groundDataOrigin = useRecoilValue(groundDataSet);
   const [groundData, setGroundData] = useState<GroundDataType | null | undefined>(groundDataOrigin);
 
   // 그라운드 승리조건
-  const { victoryCondition, ground } = useRecoilValue(gameCondition);
+  const gameConditionData = useRecoilValue(gameCondition);
 
   // 사용자 정보 셋
   const players = useRecoilValue(playerInfoChangeIcon);
@@ -59,13 +62,17 @@ const Start = () => {
         } else {
           const addDataList = [...playersHistory[turnValue].history, [x, y]];
           // 승리여부체크
-          const isVictory =
-            addDataList?.length && addDataList?.length >= victoryCondition
-              ? checkVictory(addDataList, victoryCondition)
-              : false;
+          const { win, victoryPosition }: CheckVictoryReturnType =
+            addDataList?.length && addDataList?.length >= gameConditionData.victoryCondition
+              ? checkVictory(addDataList, gameConditionData.victoryCondition)
+              : { win: false, victoryPosition: [] };
 
-          if (!isVictory) return setTurn((cur) => (cur === 0 ? 1 : 0));
-          setIsEndGame(true);
+          if (!win) return setTurn((cur) => (cur === 0 ? 1 : 0));
+          setIsEndGame((cur) => ({
+            ...cur,
+            win,
+            victoryPosition,
+          }));
         }
       }
     },
@@ -79,18 +86,18 @@ const Start = () => {
       // 확정시
       if (!isRollback) {
         // 승리여부체크
-        const isVictory =
+        const { win, victoryPosition }: CheckVictoryReturnType =
           playersHistory[turnValue].history?.length &&
-          playersHistory[turnValue].history?.length >= victoryCondition
-            ? checkVictory(playersHistory[turnValue].history, victoryCondition)
-            : false;
+          playersHistory[turnValue].history?.length >= gameConditionData.victoryCondition
+            ? checkVictory(playersHistory[turnValue].history, gameConditionData.victoryCondition)
+            : { win: false, victoryPosition: [] };
 
-        if (!isVictory) {
+        if (!win) {
           setTurn((cur) => (cur === 0 ? 1 : 0));
           setOnClickEnable(true);
           return;
         }
-        setIsEndGame(true);
+        setIsEndGame((cur) => ({ ...cur, win, victoryPosition }));
       }
 
       // 무르기시
@@ -123,7 +130,7 @@ const Start = () => {
 
   // 게임 승자 확정시 컨트롤용
   useEffect(() => {
-    if (!isEndGame) return;
+    if (!isEndGame.win) return;
 
     setOnClickEnable(false);
 
@@ -152,15 +159,17 @@ const Start = () => {
         }, []);
 
       // 최종 정리되는 자료
-      const newHistoryData = {
+      const newHistoryData: LocalStorageHistoryType = {
         players: players
           ? [
               { ...players[0], icon: { ...players[0].icon, label: null } },
               { ...players[1], icon: { ...players[1].icon, label: null } },
             ]
           : [],
-        ground,
+        gameCondition: gameConditionData,
         history: newHistoryLine,
+        winner: turnValue,
+        victoryPosition: isEndGame.victoryPosition,
         time: nowDayAndTimeOnlyNumber({ format: 'YYYY/MM/DD/HH:mm' }),
       };
 
@@ -178,7 +187,7 @@ const Start = () => {
     return () => {
       clearTimeout(time);
     };
-  }, [isEndGame]);
+  }, [isEndGame.win]);
 
   if (!groundData || !players)
     return (
@@ -209,7 +218,7 @@ const Start = () => {
           {turn === 0 &&
             playersHistory[0].rollBack !== 0 &&
             playersHistory[0].history.length !== 0 &&
-            !isEndGame &&
+            !isEndGame.win &&
             !onClickEnable && (
               <>
                 {' '}
@@ -225,7 +234,7 @@ const Start = () => {
           {turn === 1 &&
             playersHistory[1].rollBack !== 0 &&
             playersHistory[1].history.length !== 0 &&
-            !isEndGame &&
+            !isEndGame.win &&
             !onClickEnable && (
               <>
                 {' '}
@@ -236,6 +245,7 @@ const Start = () => {
         </Box>
       </Box>
       <CheckBox
+        isEndGame={isEndGame}
         onClickEnable={onClickEnable}
         groundData={groundData}
         playerData={players}
