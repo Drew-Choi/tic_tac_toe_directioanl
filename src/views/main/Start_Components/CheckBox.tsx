@@ -106,7 +106,7 @@ const CheckBox = ({
                       ''
                     ) : (
                       <Box
-                        color={playerData[playerMark].color}
+                        color={playerData[playerMark]?.color}
                         sx={{
                           width: '100%',
                           height: '100%',
@@ -117,12 +117,10 @@ const CheckBox = ({
                             viewBox: '0 0 100 100',
                             width: '60%',
                             height: 'auto',
-                            // fontSize: { xs: '15vw', md: '1em' },
-                            // transform: 'translateY(10%)',
                           },
                         }}
                       >
-                        {playerData[playerMark].icon.label}
+                        {playerData[playerMark]?.icon.label}
                       </Box>
                     )}
                   </Box>

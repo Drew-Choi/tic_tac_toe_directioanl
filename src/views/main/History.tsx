@@ -5,6 +5,7 @@ import GameBoardPopup from './History_Components/GameBoardPopup';
 import { gameCondition } from '../../recoil/gameCondition';
 import { useSetRecoilState } from 'recoil';
 import { playerInfo } from '../../recoil/player';
+import HistoryCard from './History_Components/HistoryCard';
 
 const History = () => {
   const [historyList, setHistoryList] = useState<LocalStorageHistoryType[] | []>([]);
@@ -34,7 +35,12 @@ const History = () => {
     <Box
       color="white"
       component="section"
-      sx={{ position: 'relative', boxSizing: 'border-box', width: '100%', padding: '30px' }}
+      sx={{
+        position: 'relative',
+        boxSizing: 'border-box',
+        width: '100%',
+        padding: { xs: '30px 10px', md: '30px' },
+      }}
     >
       {choiceHistoryData && (
         <GameBoardPopup
@@ -46,15 +52,7 @@ const History = () => {
         <Typography>게임 히스토리가 없습니다.</Typography>
       ) : (
         historyList?.map((el, index) => (
-          <Box key={index} sx={{ cursor: 'pointer' }} onClick={() => choiceHistoryHandler(el)}>
-            <Typography>{el?.time}</Typography>
-            <Typography>
-              {el.players[0]?.name} vs {el.players[1]?.name}
-            </Typography>
-            <Typography>
-              {el.gameCondition?.ground} x {el.gameCondition?.ground}
-            </Typography>
-          </Box>
+          <HistoryCard key={index} el={el} onClickEvent={() => choiceHistoryHandler(el)} />
         ))
       )}
     </Box>

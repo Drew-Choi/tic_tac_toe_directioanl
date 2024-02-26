@@ -47,6 +47,14 @@ declare global {
   };
 
   type CheckVictoryReturnType = { win: boolean; victoryPosition: number[][] };
+
+  interface UsePopupProps {
+    show?: boolean;
+    title: string;
+    content: string | ReactNode;
+    onStart?: (() => void) | null;
+    onHistory?: (() => void) | null;
+  }
 }
 
 export {};

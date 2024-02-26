@@ -12,6 +12,7 @@ type InputTextPropsType = {
   labelColor?: string;
   sx?: SxProps;
   textColor?: string;
+  placeholder?: string;
 };
 
 const InputText = ({
@@ -23,9 +24,11 @@ const InputText = ({
   onChangeEvent,
   sx,
   textColor = COLOR_LIST.WHITE,
+  placeholder,
 }: InputTextPropsType) => {
   return (
     <TextField
+      placeholder={placeholder}
       value={value}
       onChange={onChangeEvent}
       inputRef={inputRef}

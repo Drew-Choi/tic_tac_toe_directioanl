@@ -11,6 +11,7 @@ import Footer from './views/header_footer/Footer';
 import { useSetRecoilState } from 'recoil';
 import { isMobileValue } from './recoil/isMobileValue';
 import COLOR_LIST from './style/COLOR_LIST';
+import UsePopupComponent from './hooks/UsePopupComponent';
 
 function App() {
   // 모바일체크 전역 설정
@@ -27,12 +28,14 @@ function App() {
         component="main"
         maxWidth="md"
         sx={{
+          width: '100%',
           position: 'relative',
           minHeight: '80vh',
           borderRight: '1px solid' + COLOR_LIST.DARK_GRAY,
           borderLeft: '1px solid' + COLOR_LIST.DARK_GRAY,
         }}
       >
+        <UsePopupComponent />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/settings" element={<Settings />} />

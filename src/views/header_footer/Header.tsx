@@ -3,13 +3,15 @@ import React from 'react';
 import COLOR_LIST from '../../style/COLOR_LIST';
 import { Typography } from '@mui/material';
 import ButtonBack from '../../components/ButtonBack';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
 import { gameCondition } from '../../recoil/gameCondition';
 import { playerInfo } from '../../recoil/player';
+import ButtonNormal from '../../components/ButtonNormal';
 
 const Header = () => {
   const pathName = useLocation().pathname;
+  const navigate = useNavigate();
   // 게임 중 뒤로가기 초기화
   const setGameCondition = useSetRecoilState(gameCondition);
   const setPlayInfo = useSetRecoilState(playerInfo);
@@ -30,7 +32,7 @@ const Header = () => {
         borderRadius: '50px 50px 0 0',
       }}
     >
-      {pathName !== '/' && (
+      {pathName !== '/' && pathName !== '/history' && (
         <ButtonBack
           sx={{ position: 'absolute', left: '20px' }}
           addEvents={() => {
@@ -41,6 +43,14 @@ const Header = () => {
             }
           }}
         />
+      )}
+      {(pathName === '/settings/start' || pathName === '/history') && (
+        <ButtonNormal
+          sx={{ position: 'absolute', right: '20px' }}
+          onClickEvent={() => navigate('/')}
+        >
+          처음으로
+        </ButtonNormal>
       )}
       <Typography textAlign="center" fontSize="20px" fontWeight={600}>
         Tic Tac Toe Game

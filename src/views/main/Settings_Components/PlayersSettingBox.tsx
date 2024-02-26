@@ -25,6 +25,7 @@ type PlayersSettingBoxPropsType = {
   onChangeRadio?: (e: ChangeEvent<HTMLInputElement>) => void;
   inputSx?: SxProps;
   containerSx?: SxProps;
+  inputPlaceholder?: string;
 };
 
 const PlayersSettingBox = ({
@@ -44,6 +45,7 @@ const PlayersSettingBox = ({
   radioValue = '',
   onChangeRadio,
   containerSx,
+  inputPlaceholder,
 }: PlayersSettingBoxPropsType) => {
   return (
     <Box sx={{ ...containerSx }}>
@@ -56,6 +58,7 @@ const PlayersSettingBox = ({
         }}
       >
         <InputText
+          placeholder={inputPlaceholder}
           sx={{ width: '150px' }}
           inputRef={playerNameRef}
           label={inputLabel}

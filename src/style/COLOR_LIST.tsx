@@ -8,6 +8,7 @@ const COLOR_LIST = {
   PINK: '#ff84848d',
   BLUE: '#0008ff',
   RED: '#ff0000',
+  STRONG_PINK: '#ff8484',
 };
 
 export default COLOR_LIST;

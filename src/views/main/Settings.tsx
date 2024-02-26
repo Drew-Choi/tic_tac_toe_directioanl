@@ -10,8 +10,11 @@ import SliderCustom from '../../components/SliderCustom';
 import { GROUND_SETTING_VALUE } from '../../constant/COUNT_NUMBER';
 import PlayersSettingBox from './Settings_Components/PlayersSettingBox';
 import ButtonNormal from '../../components/ButtonNormal';
+import { usePopup } from '../../hooks/usePopup';
 
 const Settings = () => {
+  const { openPopup } = usePopup();
+
   const setPlayerName = useSetRecoilState(playerInfo);
   const [gameSettings, setGameSettings] = useRecoilState(gameCondition);
   const playerNameOneRef = useRef<HTMLInputElement>(null);
@@ -48,6 +51,12 @@ const Settings = () => {
       const playerTwo = playerNameTwoRef.current?.value
         ? playerNameTwoRef.current?.value
         : '플레이어2';
+
+      if (playerOne?.length > 6)
+        return openPopup({ title: '안내', content: '플레이어1 이름을 6자 이내로 해주세요.' });
+
+      if (playerTwo?.length > 6)
+        return openPopup({ title: '안내', content: '플레이어2 이름을 6자 이내로 해주세요.' });
 
       if (!firstPlayPlayer) {
         const random = Math.floor(Math.random() * 2) + 1;
@@ -162,6 +171,7 @@ const Settings = () => {
         </Box>
 
         <PlayersSettingBox
+          inputPlaceholder="6자 이내"
           playerNameRef={playerNameOneRef}
           inputLabel="PLAYER 1"
           selectData={SVG_LIST}
@@ -185,6 +195,7 @@ const Settings = () => {
         />
 
         <PlayersSettingBox
+          inputPlaceholder="6자 이내"
           containerSx={{ marginBottom: '50px' }}
           playerNameRef={playerNameTwoRef}
           inputLabel="PLAYER 2"

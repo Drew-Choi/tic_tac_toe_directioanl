@@ -10,8 +10,13 @@ import { nowDayAndTimeOnlyNumber } from '../../utils/generateDate';
 import { ROLLBACK_COUNT } from '../../constant/COUNT_NUMBER';
 import ButtonNormal from '../../components/ButtonNormal';
 import COLOR_LIST from '../../style/COLOR_LIST';
+import { usePopup } from '../../hooks/usePopup';
+import { useNavigate } from 'react-router-dom';
+import { FaCheck } from 'react-icons/fa';
 
 const Start = () => {
+  const { openPopup } = usePopup();
+  const navigate = useNavigate();
   // 게임 종료 여부
   const [isEndGame, setIsEndGame] = useState<CheckVictoryReturnType>({
     win: false,
@@ -214,7 +219,12 @@ const Start = () => {
 
     const time = setTimeout(() => {
       const turnValue = !turn ? 0 : turn;
-      alert(`${players ? players[turnValue].name : ''} 승리!`);
+      openPopup({
+        title: '게임 종료',
+        content: `${players ? players[turnValue].name : ''} 승리!`,
+        onStart: () => navigate('/'),
+        onHistory: () => navigate('/history'),
+      });
       saveVictoryInfo({ winnerValue: turnValue, victoryPosition: isEndGame.victoryPosition });
     }, 500);
 
@@ -229,7 +239,12 @@ const Start = () => {
 
     if (!isEndGame.win && totalTurn === 0) {
       setOnClickEnable(false);
-      alert(`무승부 `);
+      openPopup({
+        title: '게임 종료',
+        content: `무승부`,
+        onStart: () => navigate('/'),
+        onHistory: () => navigate('/history'),
+      });
       saveVictoryInfo({ winnerValue: 2, victoryPosition: [] });
     }
   }, [totalTurn]);
@@ -246,7 +261,7 @@ const Start = () => {
           padding: '30px',
         }}
       >
-        <Typography>세팅값을 입력해주세요.</Typography>
+        <Typography>뒤로 돌아가 게임 세팅값을 입력해주세요.</Typography>
       </Box>
     );
 
@@ -268,12 +283,23 @@ const Start = () => {
       <Box
         sx={{
           display: 'flex',
+          position: 'relative',
           justifyContent: 'space-between',
           alignItems: 'flex-start',
           height: { xs: '120px', sm: '70px' },
         }}
       >
-        <Box>
+        <Box sx={{ position: 'relative', opacity: turn === 0 || turn === null ? '1' : '0.3' }}>
+          <FaCheck
+            style={{
+              display: turn !== null && turn === 0 ? 'block' : 'none',
+              position: 'absolute',
+              color: COLOR_LIST.STRONG_PINK,
+              top: '-35px',
+              left: '20px',
+            }}
+            size={35}
+          />
           <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <Typography gutterBottom>{players[0]?.name}</Typography>
             <Box color={players[0]?.color}>{players[0]?.icon.label}</Box>
@@ -306,14 +332,24 @@ const Start = () => {
           </Box>
         </Box>
 
-        <Box>
+        <Box sx={{ position: 'relative', opacity: turn === 1 || turn === null ? '1' : '0.3' }}>
+          <FaCheck
+            style={{
+              display: turn !== null && turn === 1 ? 'block' : 'none',
+              position: 'absolute',
+              color: COLOR_LIST.STRONG_PINK,
+              top: '-35px',
+              right: '20px',
+            }}
+            size={35}
+          />
           <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px', justifyContent: 'right' }}>
             <Typography sx={{ display: { xs: 'none', sm: 'block' } }}>
               <span style={{ fontSize: '12px' }}>무르기 남은 횟수: </span>
               {playersHistory[1].rollBack}
             </Typography>
-            <Typography gutterBottom>{players[1]?.name}</Typography>
             <Box color={players[1]?.color}>{players[1]?.icon.label}</Box>
+            <Typography gutterBottom>{players[1]?.name}</Typography>
           </Box>
           {/* 반응형 위치 변경 */}
           <Typography sx={{ display: { xs: 'block', sm: 'none' } }}>
