@@ -47,7 +47,11 @@ const Header = () => {
       {(pathName === '/settings/start' || pathName === '/history') && (
         <ButtonNormal
           sx={{ position: 'absolute', right: '20px' }}
-          onClickEvent={() => navigate('/')}
+          onClickEvent={() => {
+            setGameCondition((cur) => ({ ...cur, victoryCondition: 3, ground: null }));
+            setPlayInfo([]);
+            navigate('/');
+          }}
         >
           처음으로
         </ButtonNormal>
